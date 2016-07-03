@@ -1,108 +1,96 @@
-
-import {DemoService} from './demo.service';
 import {Component} from 'angular2/core';
-import {FORM_DIRECTIVES} from "angular2/common";
+import {Service} from './services';
 import {HTTP_PROVIDERS} from 'angular2/http';
+import {FORM_DIRECTIVES} from 'angular2/common';
+
 
 
 @Component({
-  selector: 'demo-app',
-  template:`
-  <h1>Angular2 HTTP Demo App</h1>
-
-  <form f="postForm" (ngSubmit)="doPost()">
-
-      <input [(ngModel)]="call_post" placeholder="0">
-      <br>
-      <textarea [(ngModel)]="comment"> </textarea>
-<br>
-       <button type="submit" class="btn btn-warning btn-lg">POST</button>
-  </form>
-
-  <h1>comments</h1>
-<div class= "desc">
-  <div class="comment" *ngFor="#food of foods">
-
-  <div class="name">
-  {{food._id}}
+    selector: 'my-app',
+    directives: [FORM_DIRECTIVES],
+    template: `
+      <form >
+        <h1> Send me a message </h1>
+        <div class="row">
+  <div class="label">
+      Email:</div>
+       <div class="answer"> <input [(ngModel)]="call_post" placeholder="Email"> </div>
 </div>
-
-<div class="com">
-<h3>Comment </h3>
-{{food.comment}}
+        <br>
+        <div class="row">
+        <div class="label">
+      Comments:</div>
+      <div class="answer"> <textarea [(ngModel)]="comment"> </textarea></div>
+  <br>
 </div>
+<div class="row">
+         <button type="submit" class="">Send Message</button>
+       </div>
+    </form>
+               `,
 
-  </div>
-</div>
-  <h2>Books and Movies</h2>
-  <h3>Books</h3>
-  <ul>
-    <li *ngFor="#book of books">{{book.title}}</li>
-  </ul>
-  <h3>Movies</h3>
-  <ul>
-    <li *ngFor="#movie of movies">{{movie.title}}</li>
-  </ul>
-  `,
-  styles: [`
-    .desc{
+               styles: [`
+                 h1{
+       text-align: center;
+       color: #445668
+     }
+     form{
+       background: #c9d0de;
+       width:500px;
+       height: 300px;
 
-      width: 900px;
-      display: flex;
-  flex-wrap: wrap;
+       border: 1px solid #e1e1e1
+     }
+     .row{
+       display: flex;
+          flex-wrap: wrap;
+          width:400px;
+          padding-left: 25px;
 
-    }
-    .comment{
-      width:300px;
-      height: 300px;
-      magin-bottom:25px;
-    }
 
-  `]
+     }
+     .label{
+       width:120px;
+       font-size: 20px;
+     color: #445668
+     }
 
+     input{
+       width:250px;
+     background-color: #818b94;
+     border-radius: 5px;
+     height: 25px;
+     }
+     textarea{
+       width:250px;
+       height:75px;
+       background-color: #818b94;
+       border-radius: 5px;
+     }
+     button{
+       margin-left: 255px;
+       margin-top: 25px;;
+       padding: 10px 15px;
+       background-color: #718da9;
+       border-radius: 5px;
+       color: white;
+     }
+               `]
 })
 export class AppComponent {
 
+    public call_post;
+    public comment;
 
-      public foods;
-      public books;
-      public movies;
-      public call_post;
-      public comment;
+    constructor(private _Service: Service) { }
 
-      constructor(private _demoService: DemoService) { }
 
-      ngOnInit() {
-        this.getFoods();
-        this.getBooksAndMovies();
 
-      }
+    doPost() {
 
-      doPost() {
+      this._Service.post(this.call_post, this.comment);
 
-        this._demoService.post(this.call_post, this.comment);
+     }
 
-       }
 
-      getFoods() {
-        this._demoService.getFoods().subscribe(
-          // the first argument is a function which runs on success
-          data => { this.foods = data},
-          // the second argument is a function which runs on error
-          err => console.error(err),
-          // the third argument is a function which runs on completion
-          () => console.log('done loading foods')
-        );
-      }
-
-      getBooksAndMovies() {
-        this._demoService.getBooksAndMovies().subscribe(
-          data => {
-            this.books = data[0]
-            this.movies = data[1]
-          }
-          // No error or completion callbacks here. They are optional, but
-          // you will get console errors if the Observable is in an error state.
-        );
-      }
 }
