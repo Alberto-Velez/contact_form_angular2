@@ -1,7 +1,11 @@
 import {Component} from 'angular2/core';
 import {Service} from './services';
 import {HTTP_PROVIDERS} from 'angular2/http';
-import {FORM_DIRECTIVES} from 'angular2/common';
+import {
+	FORM_DIRECTIVES
+} from 'angular2/common';
+
+
 
 
 
@@ -9,12 +13,13 @@ import {FORM_DIRECTIVES} from 'angular2/common';
     selector: 'my-app',
     directives: [FORM_DIRECTIVES],
     template: `
-      <form >
+      <form   (ngSubmit)="doPost()" >
         <h1> Send me a message </h1>
         <div class="row">
   <div class="label">
       Email:</div>
        <div class="answer"> <input [(ngModel)]="call_post" placeholder="Email"> </div>
+
 </div>
         <br>
         <div class="row">
